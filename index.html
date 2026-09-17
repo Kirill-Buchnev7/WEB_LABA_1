@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        header {
+            color:white;
+            background-color:#2c3e50;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 80px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .img-container img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .caption {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        ul, ol {
+            margin-bottom: 20px;
+        }
+        .highlight {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 5px solid #3498db;
+            margin: 20px 0;
+        }
+    </style>
+<body>
+    <header>
+        <h1>Определение факторов, влияющих на индекс токсичности почвы методом регрессионного анализа</h1>
+    </header>
+    <div class="container">
+        <section>
+            <h2>Введение</h2>
+            <p>Проблема загрязнения почв тяжелыми металлами и химикатами стоит остро, особенно вблизи заводов и дорог. Традиционный анализ токсичности требует дорогостоящих исследований. Целью данного курсового проекта является построение регрессионной модели, позволяющей прогнозировать индекс токсичности почвы на основе простых и доступных показателей, таких как кислотность и содержание органики. Это позволит быстро и недорого проверять большие территории.</p>
+        </section>
+        <section>
+            <h2>Методология и инструменты</h2>
+            <p>Для анализа использовались данные 9 участков города Киров. В работе применялись следующие методы и инструменты:</p>
+            <ul>
+                <li><strong>Язык программирования:</strong> Python (библиотеки pandas, numpy, statsmodels, scipy).</li>
+                <li><strong>Среда разработки:</strong> Visual Studio Code.</li>
+                <li><strong>Методы:</strong> Корреляционный анализ, метод наименьших квадратов (МНК), проверка мультиколлинеарности (VIF), тест Шапиро-Уилка.</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Анализ данных и отбор факторов</h2>
+            <p>На первом этапе были рассчитаны парные коэффициенты корреляции для четырех типов преобразований факторов (линейная, полулогарифмическая, экспоненциальная, гиперболическая). Наибольшую связь с индексом токсичности показали:</p>
+            <ol>
+                <li><strong>Валовое содержание кадмия (X12_Cd):</strong> |r| = 0.8504, форма lnX.</li>
+                <li><strong>Валовое содержание меди (X14_Cu):</strong> |r| = 0.7758, форма lnX.</li>
+                <li><strong>pH солевой вытяжки (X3_ph_s):</strong> |r| = 0.7393, линейная форма.</li>
+            </ol>
+            <p>Однако между кадмием и медью была обнаружена высокая корреляция (r = 0.872), что указывает на мультиколлинеарность. Для получения устойчивой модели было решено исключить медь и оставить кадмий и pH.</p>
+        </section>
+        <section>
+            <h2>Визуализация зависимостей</h2>
+            <div class="img-container">
+                <!-- Замените ссылку ниже на путь к вашему изображению в репозитории -->
+                <img src="kadmi.png" alt="Зависимость индекса токсичности от логарифма кадмия">
+                <p class="caption">Рисунок 1. Зависимость индекса токсичности от логарифма валового содержания кадмия</p>
+            </div>
+            <div class="img-container">
+                <!-- Замените ссылку ниже на путь к вашему изображению в репозитории -->
+                <img src="matrix.png" alt="Матрица корреляций отобранных факторов">
+                <p class="caption">Рисунок 2. Матрица парных коэффициентов корреляции отобранных факторов</p>
+            </div>
+        </section>
+        <section>
+            <h2>Результаты моделирования</h2>
+            <p>Финальная регрессионная модель имеет вид:</p>
+            <div class="highlight">
+                <p><strong>Y = 0.5622 - 0.2404 * ln(X12_Cd) - 0.0579 * X3_ph_s</strong></p>
+            </div>
+            <p>Основные показатели качества модели представлены в таблице:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Показатель</th>
+                        <th>Значение</th>
+                        <th>Интерпретация</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>R²</td>
+                        <td>0.7903</td>
+                        <td>Модель объясняет 79% дисперсии индекса токсичности</td>
+                    </tr>
+                    <tr>
+                        <td>F-статистика</td>
+                        <td>11.30</td>
+                        <td>Модель статистически значима (p = 0.0092)</td>
+                    </tr>
+                    <tr>
+                        <td>p-value (X12_Cd)</td>
+                        <td>0.0385</td>
+                        <td>Коэффициент при кадмии значим на уровне 5%</td>
+                    </tr>
+                    <tr>
+                        <td>p-value (X3_ph_s)</td>
+                        <td>0.2151</td>
+                        <td>Коэффициент при pH незначим, но сохранен по теоретическим соображениям</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section>
+            <h2>Выводы</h2>
+            <p>В ходе работы была построена модель, позволяющая с высокой точностью прогнозировать токсичность почвы на основе двух показателей: валового содержания кадмия и pH солевой вытяжки. Это подтверждает возможность замены дорогостоящего анализа тяжелых металлов на более простые и дешевые методы мониторинга.</p>
+        </section>
+        <section>
+            <h2>Ссылки</h2>
+            <ul>
+                <li>Магнус Я.Р., Катышев П.К., Пересецкий А.А. Эконометрика. Начальный курс. — 6-е изд., перераб. и доп. — М.: Дело, 2004. <a href="http://old.math.isu.ru/ru/chairs/me/files/books/magnus.pdf">http://old.math.isu.ru/ru/chairs/me/files/books/magnus.pdf</a></li>
+                <li>Вальков В.Ф., Казеев К.Ш., Колесников С.И. Почвоведение: Учебник для вузов. — М.: ИКЦ «МарТ»; Ростов н/Д: Издательский центр «МарТ», 2004. <a href="https://studfile.net/preview/3559611/">https://studfile.net/preview/3559611/</a></li>
+                <li>Околелова А.А., Стяжин В.Н., Егорова Г.С., Касьянова А.С. Использование регрессионного анализа для определения содержания водорастворимых солей в почвах по результатам водной вытяжки // Научный журнал Российского НИИ проблем мелиорации. 2013. <a href="https://cyberleninka.ru/article/n/ispolzovanie-regressionnogo-analiza-dlya-opredeleniya-soderzhaniya-vodorastvorimyh-soley-v-pochvah-po-rezultatam-vodnoy-vytyazhki/viewer">https://cyberleninka.ru/article/n/ispolzovanie-regressionnogo-analiza-dlya-opredeleniya-soderzhaniya-vodorastvorimyh-soley-v-pochvah-po-rezultatam-vodnoy-vytyazhki/viewer</a></li>
+                <li>Околелова А.А., Стяжин В.Н., Касьянова А.С. Оценка продуктивности почв с помощью регрессионного анализа // Фундаментальные исследования. 2012. <a href="https://fundamental-research.ru/article/view?id=29603">https://fundamental-research.ru/article/view?id=29603</a></li>
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
